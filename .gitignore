@@ -1,0 +1,4 @@
+.env
+mariadb/data
+fastapi
+nextjs-dashboard

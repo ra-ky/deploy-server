@@ -1,0 +1,7 @@
+.git
+.github
+.env
+nginx
+mariadb
+fastapi
+nextjs-dashboard

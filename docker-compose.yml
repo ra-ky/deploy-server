@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - fastapi
+      - nextjs
+
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb
+    restart: always
+    volumes:
+      - ./mariadb/conf.d:/etc/mysql/conf.d
+      - ${MARIADB_DATA_VOLUME}:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+
+  fastapi:
+    image: localhost:5000/fastapi:latest
+    container_name: fastapi
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mariadb
+  
+  nextjs:
+    image: localhost:5000/nextjs:latest
+    container_name: nextjs
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - fastapi
+  
+
